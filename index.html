@@ -101,8 +101,13 @@
       transform: translate(-50%, -50%) scale(0);
       font-size: 4rem;
       opacity: 0;
-      animation: trophy-pop 1s ease forwards;
+      display: none;
       z-index: 10;
+    }
+
+    .show-trophy {
+      display: block;
+      animation: trophy-pop 1s ease forwards;
     }
 
     @keyframes trophy-pop {
@@ -171,6 +176,8 @@
         board.appendChild(cell);
         cells.push(cell);
       }
+      gameOver = false;
+      hideTrophy();
     }
 
     function makeMove(i) {
@@ -219,13 +226,12 @@
       playSound(winSound);
       const winCombo = checkWin();
       winCombo.forEach(i => cells[i].classList.add("winner"));
+
       if (player === "X") scoreX++; else scoreO++;
       scoreXEl.textContent = scoreX;
       scoreOEl.textContent = scoreO;
 
-      trophy.style.display = "block";
-      trophy.style.animation = "trophy-pop 1s ease forwards";
-
+      showTrophy();
       confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
     }
 
@@ -235,11 +241,22 @@
       gameOver = true;
     }
 
+    function showTrophy() {
+      trophy.classList.add("show-trophy");
+      setTimeout(() => {
+        hideTrophy();
+      }, 3000);
+    }
+
+    function hideTrophy() {
+      trophy.classList.remove("show-trophy");
+      trophy.style.display = "none";
+    }
+
     function newGame() {
       createBoard();
       currentPlayer = "X";
       gameOver = false;
-      trophy.style.display = "none";
     }
 
     function resetScores() {
