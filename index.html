@@ -99,7 +99,7 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%) scale(0);
-      font-size: 4rem;
+      font-size: 5rem;
       opacity: 0;
       z-index: 10;
       pointer-events: none;
@@ -108,12 +108,12 @@
     .show-trophy {
       opacity: 1;
       transform: translate(-50%, -50%) scale(1);
-      animation: trophy-jump 1s ease-in-out infinite;
+      animation: trophy-bounce 1s ease-in-out infinite;
     }
 
-    @keyframes trophy-jump {
+    @keyframes trophy-bounce {
       0%, 100% { transform: translate(-50%, -50%) scale(1) translateY(0); }
-      50% { transform: translate(-50%, -50%) scale(1.1) translateY(-20px); }
+      50% { transform: translate(-50%, -50%) scale(1.1) translateY(-25px); }
     }
 
     .muted {
@@ -244,6 +244,8 @@
     }
 
     function showTrophy() {
+      trophy.style.opacity = 1;
+      trophy.style.transform = "translate(-50%, -50%) scale(1)";
       trophy.classList.add("show-trophy");
     }
 
@@ -257,12 +259,12 @@
       stopConfetti();
       confettiInterval = setInterval(() => {
         confetti({
-          particleCount: 40,
+          particleCount: 50,
           spread: 80,
           origin: { y: 0.6 },
           colors: player === "X" ? ['#0047ab','#00bfff'] : ['#ff4757','#ffa502']
         });
-      }, 400);
+      }, 4000);
     }
 
     function stopConfetti() {
