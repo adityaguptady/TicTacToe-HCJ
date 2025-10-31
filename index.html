@@ -101,7 +101,6 @@
       transform: translate(-50%, -50%) scale(0);
       font-size: 4rem;
       opacity: 0;
-      transition: all 0.5s ease;
       z-index: 10;
       pointer-events: none;
     }
@@ -109,13 +108,12 @@
     .show-trophy {
       opacity: 1;
       transform: translate(-50%, -50%) scale(1);
-      animation: trophy-pop 0.8s ease;
+      animation: trophy-jump 1s ease-in-out infinite;
     }
 
-    @keyframes trophy-pop {
-      0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
-      50% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
-      100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    @keyframes trophy-jump {
+      0%, 100% { transform: translate(-50%, -50%) scale(1) translateY(0); }
+      50% { transform: translate(-50%, -50%) scale(1.1) translateY(-20px); }
     }
 
     .muted {
@@ -159,6 +157,7 @@
     let scoreX = 0, scoreO = 0;
     let soundEnabled = true;
     let gameOver = false;
+    let confettiInterval = null;
 
     const clickSound = new Audio("https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3");
     const winSound = new Audio("https://assets.mixkit.co/sfx/preview/mixkit-winning-notification-2018.mp3");
@@ -180,6 +179,7 @@
       }
       gameOver = false;
       hideTrophy();
+      stopConfetti();
     }
 
     function makeMove(i) {
@@ -234,12 +234,7 @@
       scoreOEl.textContent = scoreO;
 
       showTrophy();
-      confetti({
-        particleCount: 150,
-        spread: 80,
-        origin: { y: 0.6 },
-        colors: player === "X" ? ['#0047ab','#00bfff'] : ['#ff4757','#ffa502']
-      });
+      startConfetti(player);
     }
 
     function handleDraw() {
@@ -250,15 +245,31 @@
 
     function showTrophy() {
       trophy.classList.add("show-trophy");
-      setTimeout(() => {
-        hideTrophy();
-      }, 3000);
     }
 
     function hideTrophy() {
       trophy.classList.remove("show-trophy");
       trophy.style.opacity = 0;
       trophy.style.transform = "translate(-50%, -50%) scale(0)";
+    }
+
+    function startConfetti(player) {
+      stopConfetti();
+      confettiInterval = setInterval(() => {
+        confetti({
+          particleCount: 40,
+          spread: 80,
+          origin: { y: 0.6 },
+          colors: player === "X" ? ['#0047ab','#00bfff'] : ['#ff4757','#ffa502']
+        });
+      }, 400);
+    }
+
+    function stopConfetti() {
+      if (confettiInterval) {
+        clearInterval(confettiInterval);
+        confettiInterval = null;
+      }
     }
 
     function newGame() {
